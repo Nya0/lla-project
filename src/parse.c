@@ -81,6 +81,11 @@ int output_file(int fd, struct dbheader_t *header, struct employee_t **employees
         return STATUS_ERROR;
     }
 
+    if (header == NULL) {
+        printf("uiser did not provide correct blagf");
+        return STATUS_ERROR;
+    }
+
     header->magic = htonl(header->magic);
     header->version = htons(header->version);
     header->count = htons(header->count);
