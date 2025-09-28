@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
             printf("could not create db file\n");
             exit(EXIT_FAILURE);
         }
-        if (create_db_header(db_file, &db_header) == STATUS_ERROR) {
+        if (create_db_header(&db_header) == STATUS_ERROR) {
             printf("could not create db header\n");
             exit(EXIT_FAILURE);
         };
@@ -65,6 +65,8 @@ int main(int argc, char *argv[]) {
 
     printf("filepath: %s\n", opts.filepath);
     printf("new file: %u\n", opts.newfile);
+
+    output_file(db_file, db_header);
 
     return 0;
 }

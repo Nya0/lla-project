@@ -10,7 +10,7 @@
 #include "common.h"
 #include "parse.h"
 
-int create_db_header(int fd, dbheader_t **headerOut) {
+int create_db_header(dbheader_t **headerOut) {
     dbheader_t *header = calloc(1, sizeof(dbheader_t));
     if (header == NULL) {
         printf("failed to allocate memory for dbheader_t\n");
@@ -23,25 +23,12 @@ int create_db_header(int fd, dbheader_t **headerOut) {
     header->filesize = sizeof(dbheader_t);
 
     *headerOut = header;
-
-    dbheader_t header_net;
-    header_net.magic = htonl(header->magic);
-    header_net.version = htons(header->version);
-    header_net.count = htons(header->count);
-    header_net.filesize = htonl(header->filesize);
-
-    if (write(fd, &header_net, sizeof(header_net)) != sizeof(header_net)) {
-        perror("write");
-        printf("failed to write dbheader_t\n");
-        return STATUS_ERROR;
-    } ;
-
     return STATUS_SUCCESS;
 }
 
 int validate_db_header(int fd, dbheader_t **headerOut) {
     if (fd < 0) {
-        printf("got bad fd for header validation\n");
+        printf("got bad fd \n");
         return STATUS_ERROR;
     }
 
@@ -50,6 +37,8 @@ int validate_db_header(int fd, dbheader_t **headerOut) {
         printf("failed to allocate memory for dbheader_t\n");
         return STATUS_ERROR;
     }
+
+    lseek(fd, 0, SEEK_SET);
 
     if (read(fd, header, sizeof(dbheader_t)) != sizeof(dbheader_t)) {
         perror("read");
@@ -83,5 +72,27 @@ int validate_db_header(int fd, dbheader_t **headerOut) {
     }
 
     *headerOut = header;
+    return STATUS_SUCCESS;
+}
+
+int output_file(int fd, dbheader_t *header) {
+    if (fd < 0) {
+        printf("got bad fd \n");
+        return STATUS_ERROR;
+    }
+
+    header->magic = htonl(header->magic);
+    header->version = htons(header->version);
+    header->count = htons(header->count);
+    header->filesize = htonl(header->filesize);
+
+    lseek(fd, 0, SEEK_SET);
+
+    if (write(fd, header, sizeof(dbheader_t)) != sizeof(dbheader_t)) {
+        perror("write");
+        printf("failed to write dbheader_t\n");
+        return STATUS_ERROR;
+    } ;
+
     return STATUS_SUCCESS;
 }
