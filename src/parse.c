@@ -10,8 +10,8 @@
 #include "common.h"
 #include "parse.h"
 
-int create_db_header(dbheader_t **headerOut) {
-    dbheader_t *header = calloc(1, sizeof(dbheader_t));
+int create_db_header(struct dbheader_t **headerOut) {
+    struct dbheader_t *header = calloc(1, sizeof(struct dbheader_t));
     if (header == NULL) {
         printf("failed to allocate memory for dbheader_t\n");
         return STATUS_ERROR;
@@ -20,19 +20,19 @@ int create_db_header(dbheader_t **headerOut) {
     header->magic = HEADER_MAGIC;
     header->version = HEADER_VERSION;
     header->count = 0;
-    header->filesize = sizeof(dbheader_t);
+    header->filesize = sizeof(struct dbheader_t);
 
     *headerOut = header;
     return STATUS_SUCCESS;
 }
 
-int validate_db_header(int fd, dbheader_t **headerOut) {
+int validate_db_header(int fd, struct dbheader_t **headerOut) {
     if (fd < 0) {
         printf("got bad fd \n");
         return STATUS_ERROR;
     }
 
-    dbheader_t *header = calloc(1, sizeof(dbheader_t));
+    struct dbheader_t *header = calloc(1, sizeof(struct dbheader_t));
     if (header == NULL) {
         printf("failed to allocate memory for dbheader_t\n");
         return STATUS_ERROR;
@@ -40,7 +40,7 @@ int validate_db_header(int fd, dbheader_t **headerOut) {
 
     lseek(fd, 0, SEEK_SET);
 
-    if (read(fd, header, sizeof(dbheader_t)) != sizeof(dbheader_t)) {
+    if (read(fd, header, sizeof(struct dbheader_t)) != sizeof(struct dbheader_t)) {
         perror("read");
         free(header);
         return STATUS_ERROR;
@@ -75,7 +75,7 @@ int validate_db_header(int fd, dbheader_t **headerOut) {
     return STATUS_SUCCESS;
 }
 
-int output_file(int fd, dbheader_t *header) {
+int output_file(int fd, struct dbheader_t *header) {
     if (fd < 0) {
         printf("got bad fd \n");
         return STATUS_ERROR;
@@ -88,7 +88,7 @@ int output_file(int fd, dbheader_t *header) {
 
     lseek(fd, 0, SEEK_SET);
 
-    if (write(fd, header, sizeof(dbheader_t)) != sizeof(dbheader_t)) {
+    if (write(fd, header, sizeof(struct dbheader_t)) != sizeof(struct dbheader_t)) {
         perror("write");
         printf("failed to write dbheader_t\n");
         return STATUS_ERROR;

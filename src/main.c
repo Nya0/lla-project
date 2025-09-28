@@ -32,7 +32,7 @@ Options parse_args(int argc, char *argv[]) {
 
 int main(int argc, char *argv[]) {
     int db_file = 0;
-    dbheader_t *db_header = NULL;
+    struct dbheader_t *db_header = NULL;
 
     Options opts = parse_args(argc, argv);
 
