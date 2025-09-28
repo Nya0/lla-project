@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
     printf("filepath: %s\n", opts.filepath);
     printf("new file: %u\n", opts.newfile);
 
-    output_file(db_file, db_header);
+    output_file(db_file, db_header, NULL);
 
     return 0;
 }

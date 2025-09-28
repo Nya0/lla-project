@@ -75,7 +75,7 @@ int validate_db_header(int fd, struct dbheader_t **headerOut) {
     return STATUS_SUCCESS;
 }
 
-int output_file(int fd, struct dbheader_t *header) {
+int output_file(int fd, struct dbheader_t *header, struct employee_t **employeesOut) {
     if (fd < 0) {
         printf("got bad fd \n");
         return STATUS_ERROR;

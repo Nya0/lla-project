@@ -2,7 +2,7 @@
 #define PARSE_H
 
 #define HEADER_VERSION 0x1
-#define HEADER_MAGIC 0xdead8eee
+#define HEADER_MAGIC 0x4c4c4144
 
 struct dbheader_t {
     unsigned int magic;
@@ -20,7 +20,7 @@ struct employee_t {
 int create_db_header(struct dbheader_t **headerOut);
 int validate_db_header(int fd,struct dbheader_t **headerOut);
 int read_employees(int fd, struct dbheader_t *header, struct employee_t **employeesOut);
-int output_file(int fd, struct dbheader_t *header);
+int output_file(int fd, struct dbheader_t *header,  struct employee_t **employeesOut);
 
 
 # endif
