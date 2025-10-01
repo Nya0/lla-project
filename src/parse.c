@@ -12,7 +12,7 @@
 
 int add_employee(struct dbheader_t *header, struct employee_t **employees, char *employee_string) {
     if (header == NULL || employees == NULL || employee_string == NULL || *employee_string == '\0') {
-        printf("no header/string provided");
+        printf("no header/string provided\n");
         return STATUS_ERROR;
     }
 
