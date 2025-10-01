@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <getopt.h>
+#include <unistd.h>
 
 #include "common.h"
 #include "file.h"
@@ -83,10 +84,11 @@ int main(int argc, char *argv[]) {
     printf("filepath: %s\n", opts.filepath);
     printf("new file: %u\n", opts.newfile);
 
-    //
-    //
-
     output_file(db_file, db_header, employees);
+
+    free(db_header);
+    free(employees);
+    close(db_file);
 
     return 0;
 }
