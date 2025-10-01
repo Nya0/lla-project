@@ -40,8 +40,6 @@ int add_employee(struct dbheader_t *header, struct employee_t **employees, char 
 
     (*employees)[header->count] = new_employee;
 
-
-
     // after success
     header->count++;
     header->filesize += sizeof(struct employee_t);
@@ -49,7 +47,14 @@ int add_employee(struct dbheader_t *header, struct employee_t **employees, char 
     return STATUS_SUCCESS;
 };
 
-
+void list_employees(struct dbheader_t *header, struct employee_t *employees) {
+    for (int i = 0; i < header->count; i++) {
+        printf("emp no. %i\n", i);
+        printf("\tname : %s\n", employees[i].name);
+        printf("\taddress: %s\n", employees[i].address);
+        printf("\thours: %d\n", employees[i].hours);
+    }
+};
 int read_employees(int fd, struct dbheader_t *header, struct employee_t **employeesOut) {
     if (fd < 0 || header == NULL || employeesOut == NULL) {
         printf("some arguments missing");

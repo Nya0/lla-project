@@ -13,19 +13,20 @@ typedef struct {
     char *filepath;
     bool newfile;
     bool help;
-
+    bool list;
 } Options;
 
 Options parse_args(int argc, char *argv[]) {
     Options opts = {0};  // init default all
     int c;
 
-    while ((c = getopt(argc, argv, "hnf:a:")) != -1) {
+    while ((c = getopt(argc, argv, "hnf:a:l")) != -1) {
         switch (c) {
             case 'n': opts.newfile = true; break;
             case 'f': opts.filepath = optarg; break;
             case 'h': opts.help = true; break;
             case 'a': opts.employee_string = optarg; break;
+            case 'l': opts.list = true; break;
             default:
                 printf("usage: %s [-n] [-f filepath]\n", argv[0]);
                 exit(EXIT_FAILURE);
@@ -77,6 +78,10 @@ int main(int argc, char *argv[]) {
         if (add_employee(db_header, &employees, opts.employee_string) == STATUS_ERROR) {
             printf("failed to parse and add employee string\n");
         }
+    }
+
+    if (opts.list) {
+        list_employees(db_header, employees);
     }
 
     printf("filepath: %s\n", opts.filepath);
