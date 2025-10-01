@@ -10,6 +10,46 @@
 #include "common.h"
 #include "parse.h"
 
+int add_employee(struct dbheader_t *header, struct employee_t *employees, char *employee_string) {
+    if (header == NULL || employee_string == NULL) {
+        printf("no header/string provided");
+        return STATUS_ERROR;
+    }
+
+    struct employee_t new_employee = {0};
+    strncpy(new_employee.name, strtok(employee_string, ","), sizeof(new_employee.name));
+    strncpy(new_employee.address, strtok(NULL, ","), sizeof(new_employee.address));
+    new_employee.hours = atoi(strtok(NULL, ","));
+
+    employees[header->count - 1] = new_employee;
+
+    return STATUS_SUCCESS;
+};
+
+
+int read_employees(int fd, struct dbheader_t *header, struct employee_t **employeesOut) {
+    if (fd < 0 || header == NULL || employeesOut == NULL) {
+        printf("some arguments missing");
+        return STATUS_ERROR;
+    }
+
+    int count = header->count;
+
+    struct employee_t *employees = calloc(count, sizeof(struct employee_t)); // gives us a pointer to an array of type struct employee_t which can house `count` employees
+    if (employees == NULL) {
+        printf("failed to allocate memory to house employees");
+    }
+
+    read(fd, employees, count*sizeof(struct employee_t));
+
+    for (int i = 0; i < count; i++) {
+        employees[i].hours = ntohs(employees[i].hours);
+    }
+
+    *employeesOut = employees;
+    return STATUS_SUCCESS;
+}
+
 int create_db_header(struct dbheader_t **headerOut) {
     if (headerOut == NULL) {
         printf("user gave us null headerOut pointer\n");
@@ -85,16 +125,18 @@ int validate_db_header(int fd, struct dbheader_t **headerOut) {
     return STATUS_SUCCESS;
 }
 
-int output_file(int fd, struct dbheader_t *header, struct employee_t **employeesOut) {
+int output_file(int fd, struct dbheader_t *header, struct employee_t *employees) {
     if (fd < 0) {
         printf("got bad fd \n");
         return STATUS_ERROR;
     }
 
     if (header == NULL) {
-        printf("uiser did not provide correct blagf");
+        printf("user did not provide correct blagf");
         return STATUS_ERROR;
     }
+
+    int count = header->count;
 
     header->magic = htonl(header->magic);
     header->version = htons(header->version);
@@ -108,6 +150,11 @@ int output_file(int fd, struct dbheader_t *header, struct employee_t **employees
         printf("failed to write dbheader_t\n");
         return STATUS_ERROR;
     } ;
+
+    for (int i = 0; i < count; i++) {
+        employees[i].hours = htons(employees[i].hours);
+        write(fd, &employees[i], sizeof(struct employee_t));
+    }
 
     return STATUS_SUCCESS;
 }

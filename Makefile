@@ -5,6 +5,7 @@ OBJ = $(patsubst src/%.c, obj/%.o, $(SRC))
 run: clean default
 	./$(TARGET) -n -f db.meow
 	./$(TARGET) -f db.meow
+	./$(TARGET) -f db.meow -a "Mogger Jr., 443 true stress.,6789"
 
 all: run
 

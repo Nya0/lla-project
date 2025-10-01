@@ -8,20 +8,23 @@
 #include "parse.h"
 
 typedef struct {
+    char *employee_string;
     char *filepath;
     bool newfile;
     bool help;
+
 } Options;
 
 Options parse_args(int argc, char *argv[]) {
     Options opts = {0};  // init default all
     int c;
 
-    while ((c = getopt(argc, argv, "hnf:")) != -1) {
+    while ((c = getopt(argc, argv, "hnf:a:")) != -1) {
         switch (c) {
             case 'n': opts.newfile = true; break;
             case 'f': opts.filepath = optarg; break;
             case 'h': opts.help = true; break;
+            case 'a': opts.employee_string = optarg; break;
             default:
                 printf("usage: %s [-n] [-f filepath]\n", argv[0]);
                 exit(EXIT_FAILURE);
@@ -33,6 +36,7 @@ Options parse_args(int argc, char *argv[]) {
 int main(int argc, char *argv[]) {
     int db_file = 0;
     struct dbheader_t *db_header = NULL;
+    struct employee_t *employees = NULL;
 
     Options opts = parse_args(argc, argv);
 
@@ -58,15 +62,31 @@ int main(int argc, char *argv[]) {
             exit(EXIT_FAILURE);
         }
         if (validate_db_header(db_file, &db_header) == STATUS_ERROR) {
-            printf("failed to validate db header\n");
+            printf("failed to validate db header data\n");
             exit(EXIT_FAILURE);
         };
+    }
+
+    if (read_employees(db_file, db_header, &employees)) { // reading overwrites our employee
+        printf("failed to read employees\n");
+        return 0;
+    }
+
+    if (opts.employee_string != NULL) {
+        db_header->count++;
+        db_header->filesize += sizeof(struct employee_t);
+        employees = realloc(employees, db_header->count * sizeof(struct employee_t));
+
+        add_employee(db_header, employees, opts.employee_string);
     }
 
     printf("filepath: %s\n", opts.filepath);
     printf("new file: %u\n", opts.newfile);
 
-    output_file(db_file, db_header, NULL);
+    //
+    //
+
+    output_file(db_file, db_header, employees);
 
     return 0;
 }
