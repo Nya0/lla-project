@@ -74,10 +74,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (opts.employee_string != NULL) {
-        if (add_employee(db_header, &employees, opts.employee_string) == STATUS_SUCCESS) {
-            db_header->count++;
-            db_header->filesize += sizeof(struct employee_t);
-        } else {
+        if (add_employee(db_header, &employees, opts.employee_string) == STATUS_ERROR) {
             printf("failed to parse and add employee string\n");
         }
     }

@@ -12,7 +12,7 @@
 
 int add_employee(struct dbheader_t *header, struct employee_t **employees, char *employee_string) {
     if (header == NULL || employees == NULL || employee_string == NULL || *employee_string == '\0') {
-        printf("no header/string provided\n");
+        printf("error in passed arguments\n");
         return STATUS_ERROR;
     }
 
@@ -26,8 +26,10 @@ int add_employee(struct dbheader_t *header, struct employee_t **employees, char 
     (*employees)[header->count] = new_employee;
 
 
-    // after success
 
+    // after success
+    header->count++;
+    header->filesize += sizeof(struct employee_t);
 
     return STATUS_SUCCESS;
 };
