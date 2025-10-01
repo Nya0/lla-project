@@ -11,17 +11,32 @@
 #include "parse.h"
 
 int add_employee(struct dbheader_t *header, struct employee_t **employees, char *employee_string) {
-    if (header == NULL || employees == NULL || employee_string == NULL || *employee_string == '\0') {
+    if (header == NULL || employees == NULL || employee_string == NULL) {
         printf("error in passed arguments\n");
         return STATUS_ERROR;
     }
 
+    if (*employee_string == '\0') {
+        printf("empty employee string\n");
+        return STATUS_ERROR;
+    }
+
+
     *employees = realloc(*employees, (header->count + 1) * sizeof(struct employee_t));
 
     struct employee_t new_employee = {0};
-    strncpy(new_employee.name, strtok(employee_string, ","), sizeof(new_employee.name));
-    strncpy(new_employee.address, strtok(NULL, ","), sizeof(new_employee.address));
-    new_employee.hours = atoi(strtok(NULL, ","));
+    char *name = strtok(employee_string, ",");
+    char *address = strtok(NULL, ",");
+    char *hours_str = strtok(NULL, ",");
+
+    if (name == NULL || address == NULL || hours_str == NULL) {
+        printf("malformed employee string, expected: name,address,hours\n");
+        return STATUS_ERROR;
+    }
+
+    strncpy(new_employee.name, name, sizeof(new_employee.name));
+    strncpy(new_employee.address, address, sizeof(new_employee.address));
+    new_employee.hours = atoi(hours_str);
 
     (*employees)[header->count] = new_employee;
 
