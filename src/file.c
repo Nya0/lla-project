@@ -11,7 +11,7 @@
 #include "common.h"
 
 int create_db_file(char *filepath) {
-    int fd = open(filepath, O_RDWR);
+    int fd = open(filepath, O_RDWR );
     if (fd != -1) {
         close(fd);
         printf("File already exists\n");

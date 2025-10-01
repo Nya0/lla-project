@@ -11,7 +11,7 @@
 #include "parse.h"
 
 int add_employee(struct dbheader_t *header, struct employee_t *employees, char *employee_string) {
-    if (header == NULL || employees == NULL || employee_string == NULL) {
+    if (header == NULL || employees == NULL || employee_string == NULL || strlen(employee_string) == 0) {
         printf("no header/string provided");
         return STATUS_ERROR;
     }
