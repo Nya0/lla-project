@@ -67,10 +67,10 @@ int main(int argc, char *argv[]) {
         };
     }
 
-    // if (read_employees(db_file, db_header, &employees)) { // reading overwrites our employee
-    //     printf("failed to read employees\n");
-    //     return 0;
-    // }
+    if (read_employees(db_file, db_header, &employees)) { // reading overwrites our employee
+        printf("failed to read employees\n");
+        return 0;
+    }
 
     if (opts.employee_string != NULL) {
         db_header->count++;

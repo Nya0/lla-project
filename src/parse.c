@@ -21,7 +21,7 @@ int add_employee(struct dbheader_t *header, struct employee_t *employees, char *
     strncpy(new_employee.address, strtok(NULL, ","), sizeof(new_employee.address));
     new_employee.hours = atoi(strtok(NULL, ","));
 
-    employees[header->count - 1] = new_employee;
+    employees[header->count] = new_employee;
 
     return STATUS_SUCCESS;
 };
