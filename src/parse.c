@@ -48,6 +48,11 @@ int add_employee(struct dbheader_t *header, struct employee_t **employees, char 
 };
 
 void list_employees(struct dbheader_t *header, struct employee_t *employees) {
+    if (header == NULL || employees == NULL) {
+        printf("error in passed arguments\n");
+        return;
+    }
+
     for (int i = 0; i < header->count; i++) {
         printf("emp no. %i\n", i);
         printf("\tname : %s\n", employees[i].name);
