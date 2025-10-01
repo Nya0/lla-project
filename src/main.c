@@ -74,11 +74,12 @@ int main(int argc, char *argv[]) {
     }
 
     if (opts.employee_string != NULL) {
-        db_header->count++;
-        db_header->filesize += sizeof(struct employee_t);
-        employees = realloc(employees, db_header->count * sizeof(struct employee_t));
-
-        add_employee(db_header, employees, opts.employee_string);
+        if (add_employee(db_header, &employees, opts.employee_string) == STATUS_SUCCESS) {
+            db_header->count++;
+            db_header->filesize += sizeof(struct employee_t);
+        } else {
+            printf("failed to parse and add employee string\n");
+        }
     }
 
     printf("filepath: %s\n", opts.filepath);

@@ -10,18 +10,24 @@
 #include "common.h"
 #include "parse.h"
 
-int add_employee(struct dbheader_t *header, struct employee_t *employees, char *employee_string) {
-    if (header == NULL || employees == NULL || employee_string == NULL || strlen(employee_string) == 0) {
+int add_employee(struct dbheader_t *header, struct employee_t **employees, char *employee_string) {
+    if (header == NULL || employees == NULL || employee_string == NULL || *employee_string == '\0') {
         printf("no header/string provided");
         return STATUS_ERROR;
     }
+
+    *employees = realloc(*employees, (header->count + 1) * sizeof(struct employee_t));
 
     struct employee_t new_employee = {0};
     strncpy(new_employee.name, strtok(employee_string, ","), sizeof(new_employee.name));
     strncpy(new_employee.address, strtok(NULL, ","), sizeof(new_employee.address));
     new_employee.hours = atoi(strtok(NULL, ","));
 
-    employees[header->count - 1] = new_employee;
+    (*employees)[header->count] = new_employee;
+
+
+    // after success
+
 
     return STATUS_SUCCESS;
 };
