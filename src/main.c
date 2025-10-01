@@ -12,7 +12,6 @@ typedef struct {
     char *employee_string;
     char *filepath;
     bool newfile;
-    bool help;
     bool list;
 } Options;
 
@@ -24,7 +23,6 @@ Options parse_args(int argc, char *argv[]) {
         switch (c) {
             case 'n': opts.newfile = true; break;
             case 'f': opts.filepath = optarg; break;
-            case 'h': opts.help = true; break;
             case 'a': opts.employee_string = optarg; break;
             case 'l': opts.list = true; break;
             default:
